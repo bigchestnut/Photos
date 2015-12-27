@@ -1,16 +1,15 @@
-#ifndef ALBUMLISTVIEW_H
-#define ALBUMLISTVIEW_H
+#ifndef ALBUMIMAGELISTVIEW_H
+#define ALBUMIMAGELISTVIEW_H
 
 #include <QAbstractItemView>
 
-class QTapGesture;
-class QGestureEvent;
-class AlbumListModel;
-class AlbumListView : public QAbstractItemView
+class AlbumModel;
+class AlbumProxyModel;
+class AlbumImageListView : public QAbstractItemView
 {
     Q_OBJECT
 public:
-    explicit AlbumListView(QWidget *parent = 0);
+    explicit AlbumImageListView(QWidget *parent = 0);
 
     //获取一个像素点对应的Index。
     QModelIndex indexAt(const QPoint &point) const;
@@ -30,9 +29,6 @@ public slots:
 protected:
     void paintEvent(QPaintEvent *event);
 
-    void gestureEvent(QGestureEvent *event);
-    void tapGestureEvent(QTapGesture *event);
-
     QModelIndex moveCursor(CursorAction cursorAction, Qt::KeyboardModifiers modifiers);
 
     int horizontalOffset() const;
@@ -45,18 +41,21 @@ protected:
 
     QRegion visualRegionForSelection(const QItemSelection &selection) const;
 
-    bool event(QEvent *event);
+//    bool event(QEvent *event);
 
-protected slots:
+    void resizeEvent(QResizeEvent *event);
+
     void updateGeometries();
 
 private:
-    void showAlbum(const QPointF &pos);
-    AlbumListModel *m_model;
-    int m_itemHeight;
-    int m_itemSpacing;
-    int m_thumbsSize;
-    int m_fontSize;
+    inline QRect itemContentRect(const QModelIndex &index) const;
+    inline int indexScrollBarValue(const QModelIndex &index,
+                                   QAbstractItemView::ScrollHint hint);
+    int m_maxColumnCount, m_itemSize, m_spacing, m_itemSpacingSize, m_lineCount,
+        m_baseItemSize;
+
+    AlbumProxyModel *m_proxyModel;
+    AlbumModel *m_model;
 };
 
-#endif // ALBUMLISTVIEW_H
+#endif // ALBUMIMAGELISTVIEW_H

@@ -16,7 +16,11 @@ SOURCES += \
     sdk/albummodel.cpp \
     sdk/albumbadimagemodel.cpp \
     sdk/albumproxymodel.cpp \
-    sdk/albumcamerarollmodel.cpp
+    sdk/albumcamerarollmodel.cpp \
+    sdk/albumbadimagepicker.cpp \
+    sdk/albumimagelistview.cpp \
+    plugin/albumbadexposedetect/albumbadexposedetect.cpp \
+    sdk/albumimagefinder.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -28,7 +32,12 @@ HEADERS += \
     sdk/albummodel.h \
     sdk/albumbadimagemodel.h \
     sdk/albumproxymodel.h \
-    sdk/albumcamerarollmodel.h
+    sdk/albumcamerarollmodel.h \
+    sdk/albumbadimagepicker.h \
+    sdk/albumbadimagechecker.h \
+    sdk/albumimagelistview.h \
+    plugin/albumbadexposedetect/albumbadexposedetect.h \
+    sdk/albumimagefinder.h
 
 DISTFILES += \
     android/AndroidManifest.xml \

@@ -1,7 +1,8 @@
 #include <QApplication>
 #include <QPainter>
 #include <QScrollBar>
-#include <QTouchEvent>
+#include <QGestureEvent>
+#include <QTapGesture>
 
 #include "albumlistmodel.h"
 #include "albumglobal.h"
@@ -163,6 +164,7 @@ void AlbumListView::setModel(QAbstractItemModel *model)
 
 void AlbumListView::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event)
     //判断Model是否存在.
     if(m_model==nullptr)
     {
@@ -187,6 +189,12 @@ void AlbumListView::paintEvent(QPaintEvent *event)
     //绘制每一行的数据.
     while(currentRow<m_model->rowCount() && currentTop < maximumTop)
     {
+        //检查当前值是否是选中的
+        if(currentRow==currentIndex().row())
+        {
+            painter.fillRect(QRectF(0, currentTop, width(), m_itemHeight),
+                             QColor(217, 217, 217));
+        }
         //绘制左侧的缩略图
         painter.drawPixmap(m_itemSpacing,
                            currentTop+m_itemSpacing,
@@ -204,6 +212,24 @@ void AlbumListView::paintEvent(QPaintEvent *event)
         ++currentRow;
         currentTop+=m_itemHeight;
     }
+}
+
+void AlbumListView::gestureEvent(QGestureEvent *event)
+{
+    //检查event类型
+    QGesture *gesture=event->gesture(Qt::TapGesture);
+    if(gesture)
+    {
+        //检测到按下事件.
+        tapGestureEvent(static_cast<QTapGesture *>(gesture));
+        return;
+    }
+}
+
+void AlbumListView::tapGestureEvent(QTapGesture *event)
+{
+    //对于点按事件，我们处理为单击
+    showAlbum(event->position());
 }
 
 QModelIndex AlbumListView::moveCursor(QAbstractItemView::CursorAction cursorAction,
@@ -255,22 +281,17 @@ QRegion AlbumListView::visualRegionForSelection(const QItemSelection &selection)
 
 bool AlbumListView::event(QEvent *event)
 {
-    //获取事件类型。
-    QEvent::Type type=event->type();
     //筛选出手势类型.
-    switch(type)
+    switch(event->type())
     {
-    case QEvent::TouchBegin:
-    case QEvent::TouchUpdate:
-    case QEvent::TouchCancel:
-    case QEvent::TouchEnd:
-        event->accept();
-        dumpTouchEvent(event);
+    case QEvent::Gesture:
+        gestureEvent(static_cast<QGestureEvent *>(event));
         return true;
+    default:
+        //Do original event.
+        return QAbstractItemView::event(event);
     }
 
-    //Do original event.
-    return QAbstractItemView::event(event);
 }
 
 void AlbumListView::updateGeometries()
@@ -291,11 +312,13 @@ void AlbumListView::updateGeometries()
     verticalScrollBar()->setSingleStep(m_itemHeight);
 }
 
-void AlbumListView::dumpTouchEvent(QEvent *event)
+void AlbumListView::showAlbum(const QPointF &pos)
 {
-    //讲Event转化为Touch Event.
-    QTouchEvent *touchEvent=static_cast<QTouchEvent *>(event);
-    //
-    touchEvent->type();
-    ;
+    //检查Index是否有效.
+    QModelIndex index=indexAt(pos.toPoint());
+    //选中特定的Item.
+    if(index.isValid())
+    {
+        setCurrentIndex(index);
+    }
 }

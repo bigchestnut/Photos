@@ -1,15 +1,26 @@
+#include "albumbadimagepicker.h"
+#include "albumglobal.h"
+
 #include "albummodel.h"
 
+#include <QDebug>
+
 AlbumModel::AlbumModel(QObject *parent) :
-    QAbstractListModel(parent)
+    QAbstractListModel(parent),
+    m_scaledSize(50)
 {
+    m_scaledSize=50.0*albumGlobal->dpiMultiplyer();
 }
 
-void AlbumModel::appendRow(const QPixmap &pixmap)
+void AlbumModel::appendRow(const QPixmap &pixmap, bool isBadImage)
 {
     //建立一个新的Item.
     ImageItem item;
-    item.pixmap=pixmap;
+    item.pixmap=pixmap.scaled(m_scaledSize,
+                              m_scaledSize,
+                              Qt::KeepAspectRatioByExpanding,
+                              Qt::SmoothTransformation);
+    item.bad=isBadImage;
     //添加到Model.
     //将Item添加到List中.
     beginInsertRows(QModelIndex(),
@@ -73,6 +84,6 @@ bool AlbumModel::setData(const QModelIndex &index,
     //保存新的数值
     m_imageList.replace(index.row(), item);
     //发射更新信号
-    emit dataChanged(index, index, QVector<int>(1, role));
+    emit dataChanged(index, index);
     return true;
 }

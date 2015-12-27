@@ -24,6 +24,8 @@ void AlbumGlobal::initial(QObject *parent)
 AlbumGlobal::AlbumGlobal(QObject *parent) :
     QObject(parent)
 {
+    qRegisterMetaType<QVector<int>>("QVector<int>");
+
     //计算DPI缩放倍数.
     //Get the screen.
     QScreen *screen = qApp->primaryScreen();

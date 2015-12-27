@@ -5,6 +5,7 @@
 
 #include <QAbstractListModel>
 
+class AlbumBadImagePicker;
 class AlbumModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -16,7 +17,6 @@ public:
 
     explicit AlbumModel(QObject *parent = 0);
 
-    void appendRow(const QPixmap &pixmap);
 
     int rowCount(const QModelIndex &parent=QModelIndex()) const;
 
@@ -24,9 +24,8 @@ public:
 
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
-signals:
-
 public slots:
+    void appendRow(const QPixmap &pixmap, bool isBadImage);
 
 private:
     struct ImageItem
@@ -46,6 +45,8 @@ private:
 
     //设置List保存所有的图片
     QList<ImageItem> m_imageList;
+
+    int m_scaledSize;
 };
 
 #endif // ALBUMMODEL_H
