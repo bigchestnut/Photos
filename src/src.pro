@@ -11,14 +11,24 @@ SOURCES += \
     sdk/albumtitle.cpp \
     sdk/albumlistcontent.cpp \
     sdk/albumlistview.cpp \
-    sdk/albumlistmodel.cpp
+    sdk/albumlistmodel.cpp \
+    sdk/albumglobal.cpp \
+    sdk/albummodel.cpp \
+    sdk/albumbadimagemodel.cpp \
+    sdk/albumproxymodel.cpp \
+    sdk/albumcamerarollmodel.cpp
 
 HEADERS += \
     mainwindow.h \
     sdk/albumtitle.h \
     sdk/albumlistcontent.h \
     sdk/albumlistview.h \
-    sdk/albumlistmodel.h
+    sdk/albumlistmodel.h \
+    sdk/albumglobal.h \
+    sdk/albummodel.h \
+    sdk/albumbadimagemodel.h \
+    sdk/albumproxymodel.h \
+    sdk/albumcamerarollmodel.h
 
 DISTFILES += \
     android/AndroidManifest.xml \
@@ -30,3 +40,6 @@ DISTFILES += \
     android/gradlew.bat
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+RESOURCES += \
+    res/resource.qrc

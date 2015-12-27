@@ -1,3 +1,5 @@
+#include "albumproxymodel.h"
+
 #include "albumlistmodel.h"
 
 AlbumListModel::AlbumListModel(QObject *parent) :
@@ -6,17 +8,13 @@ AlbumListModel::AlbumListModel(QObject *parent) :
 
 }
 
-void AlbumListModel::appendRow(const QString &name, const QPixmap &thumbs)
+void AlbumListModel::appendRow(const QString &name,
+                               AlbumProxyModel *model)
 {
     //建立一个新的Item.
     AlbumItem item;
     item.name=name;
-    item.thumbs=thumbs.isNull()?
-                QPixmap():
-                thumbs.scaled(30,
-                              30,
-                              Qt::KeepAspectRatio,
-                              Qt::SmoothTransformation);
+    item.model=model;
     //将Item添加到List中.
     beginInsertRows(QModelIndex(),
                     m_albumList.size(),
@@ -45,7 +43,9 @@ QVariant AlbumListModel::data(const QModelIndex &index, int role) const
     switch(role)
     {
     case Qt::DecorationRole: //缩略图
-        return albumItem.thumbs;
+        return albumItem.model==nullptr?
+                    QPixmap():
+                    albumItem.model->thumbs();
     case Qt::DisplayRole: //显示的文字  （会一直向下执行）
     case Qt::EditRole:    //当编辑文字启用时，显示的文字.
         return albumItem.name;
@@ -56,11 +56,25 @@ QVariant AlbumListModel::data(const QModelIndex &index, int role) const
 
 QPixmap AlbumListModel::albumThumbs(int row) const
 {
-    return m_albumList.at(row).thumbs;
+    return m_albumList.at(row).model==nullptr?
+                QPixmap():
+                m_albumList.at(row).model->thumbs();
 }
 
 QString AlbumListModel::albumName(int row) const
 {
     return m_albumList.at(row).name;
+}
+
+AlbumProxyModel *AlbumListModel::albumModel(int row) const
+{
+    return m_albumList.at(row).model;
+}
+
+int AlbumListModel::albumRowCount(int row) const
+{
+    return m_albumList.at(row).model==nullptr?
+                0:
+                m_albumList.at(row).model->rowCount();
 }
 

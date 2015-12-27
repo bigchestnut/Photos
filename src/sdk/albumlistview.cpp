@@ -4,6 +4,7 @@
 #include <QTouchEvent>
 
 #include "albumlistmodel.h"
+#include "albumglobal.h"
 
 #include "albumlistview.h"
 
@@ -12,11 +13,20 @@
 AlbumListView::AlbumListView(QWidget *parent) :
     QAbstractItemView(parent),
     m_model(nullptr),
-    m_itemHeight(50),
-    m_itemSpacing(5),
-    m_thumbsSize(30),
-    m_fontSize(11)
+    m_itemHeight(107),
+    m_itemSpacing(12),
+    m_thumbsSize(82.5),
+    m_fontSize(22)
 {
+    //获取DPI缩放倍数.
+    qreal &&dpiMultiplyer=albumGlobal->dpiMultiplyer();
+    //Scaled the parameters.
+    m_itemHeight*=dpiMultiplyer;
+    m_itemSpacing*=dpiMultiplyer;
+    m_thumbsSize*=dpiMultiplyer;
+    m_fontSize*=dpiMultiplyer;
+
+    //Set the vertical scroll bar style.
     verticalScrollBar()->setStyleSheet("QScrollBar:vertical {"
                                        "   border: 0px solid grey;"
                                        "   background: rgba(0, 0, 0, 0);"
@@ -75,7 +85,8 @@ QModelIndex AlbumListView::indexAt(const QPoint &point) const
                 QModelIndex(); //否则，返回一个无效值。
 }
 
-void AlbumListView::scrollTo(const QModelIndex &index, QAbstractItemView::ScrollHint hint)
+void AlbumListView::scrollTo(const QModelIndex &index,
+                             QAbstractItemView::ScrollHint hint)
 {
     //判断Model是否存在，Index是否有效
     if((!m_model) || (!index.isValid()))
@@ -186,8 +197,9 @@ void AlbumListView::paintEvent(QPaintEvent *event)
                          m_model->albumName(currentRow));
         //绘制照片数量.
         painter.drawText((m_itemSpacing*3)+m_thumbsSize,
-                         currentTop+(m_itemHeight>>1)+(m_itemSpacing>>1)+m_fontSize,
-                         "999");
+                         currentTop+(m_itemHeight>>1)+(m_itemSpacing>>1)+
+                         m_fontSize,
+                         QString::number(m_model->albumRowCount(currentRow)));
         //移动到下一个Row.
         ++currentRow;
         currentTop+=m_itemHeight;

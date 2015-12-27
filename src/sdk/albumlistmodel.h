@@ -2,11 +2,11 @@
 #define ALBUMLISTMODEL_H
 
 #include <QPixmap>
-
 #include <QList>
 
 #include <QAbstractListModel>
 
+class AlbumProxyModel;
 class AlbumListModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -14,7 +14,7 @@ public:
     explicit AlbumListModel(QObject *parent = 0);
 
     void appendRow(const QString &name,
-                   const QPixmap &albumThumbs=QPixmap());
+                   AlbumProxyModel *model=nullptr);
 
     int rowCount(const QModelIndex &parent=QModelIndex()) const;
 
@@ -24,6 +24,10 @@ public:
 
     QString albumName(int row) const;
 
+    AlbumProxyModel *albumModel(int row) const;
+
+    int albumRowCount(int row) const;
+
 signals:
 
 public slots:
@@ -31,9 +35,13 @@ public slots:
 private:
     struct AlbumItem
     {
-        QPixmap thumbs; //缩略图
         QString name;
-        //!FIXME: 将相册的MOdel的指针放到这里，图片数量由其rowCount返回。
+        AlbumProxyModel *model;
+        AlbumItem() :
+            name(QString()),
+            model(nullptr)
+        {
+        }
     };
 
     QList<AlbumItem> m_albumList;

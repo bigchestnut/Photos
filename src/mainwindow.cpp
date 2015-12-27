@@ -1,4 +1,5 @@
 #include "albumlistcontent.h"
+#include "albumglobal.h"
 
 #include <QBoxLayout>
 
@@ -11,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     setContentsMargins(0,0,0,0);
     setCentralWidget(m_container);
+
     //设置容器
     m_container->setContentsMargins(0,0,0,0);
     //设置Layout.
@@ -21,4 +23,3 @@ MainWindow::MainWindow(QWidget *parent) :
     //添加控件到Layout
     containerLayout->addWidget(m_albumList, 1);
 }
-

@@ -6,6 +6,9 @@
 class AlbumTitle;
 class AlbumListView;
 class AlbumListModel;
+class AlbumModel;
+class AlbumCameraRollModel;
+class AlbumBadImageModel;
 class AlbumListContent : public QWidget
 {
     Q_OBJECT
@@ -20,6 +23,9 @@ private:
     AlbumTitle *m_title;
     AlbumListView *m_albumView;
     AlbumListModel *m_albumModel;
+    AlbumModel *m_imageModel;
+    AlbumCameraRollModel *m_cameraRollModel;
+    AlbumBadImageModel *m_badImageModel;
 };
 
 #endif // ALBUMLISTCONTENT_H

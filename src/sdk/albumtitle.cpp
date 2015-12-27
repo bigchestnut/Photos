@@ -1,7 +1,6 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QBoxLayout>
-
 #include "albumtitle.h"
 
 AlbumTitle::AlbumTitle(QWidget *parent) :
@@ -11,6 +10,8 @@ AlbumTitle::AlbumTitle(QWidget *parent) :
     m_right(new QPushButton(this))
 {
     setContentsMargins(0,0,0,0);
+    m_left->setStyleSheet("border:none");
+    m_right->setStyleSheet("border:none");
     QBoxLayout *titleLayout=new QBoxLayout(QBoxLayout::LeftToRight, this);
     titleLayout->setContentsMargins(0,0,0,0);
     titleLayout->setSpacing(0);

@@ -19,6 +19,7 @@ private:
     QWidget *m_container;
 
     AlbumListContent *m_albumList;
+
 };
 
 #endif // MAINWINDOW_H

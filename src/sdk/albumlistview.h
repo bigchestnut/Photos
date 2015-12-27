@@ -48,10 +48,10 @@ protected slots:
 private:
     void dumpTouchEvent(QEvent *event);
     AlbumListModel *m_model;
-    int m_itemHeight=50;
-    int m_itemSpacing=5;
-    int m_thumbsSize=30;
-    int m_fontSize=11;
+    int m_itemHeight;
+    int m_itemSpacing;
+    int m_thumbsSize;
+    int m_fontSize;
 };
 
 #endif // ALBUMLISTVIEW_H
